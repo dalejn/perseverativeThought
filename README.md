@@ -15,12 +15,12 @@ Code > Analysis >
 2. Plot clustering result A0_plot_brainStates.m
 3. Test reliability of clustering across individuals and time A0_reliability_brainStates.m
 4. Group and within-person analysis with worry and rumination combined Code > Analysis > worryANDruminate > 
-	a. plot_dwellTime.m
-	b. plot_fractionalOccupancy.m
-	c. plot_transitionProbability.m
+	- plot_dwellTime.m
+	- plot_fractionalOccupancy.m
+	- plot_transitionProbability.m
 5. Group and within-person analysis with worry and rumination separated Code > Analysis > worryXORruminate >
-	a. A0_preprocess_brainStates.m
-	b. plot_dwellTime.m
-	c. plot_fractionalOccupancy.m
-	d. plot_transitionProbability.m
+	- A0_preprocess_brainStates.m
+	- plot_dwellTime.m
+	- plot_fractionalOccupancy.m
+	- plot_transitionProbability.m
 6. Control energy analysis plot_controlEnergy.m
