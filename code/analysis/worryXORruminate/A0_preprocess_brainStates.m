@@ -97,9 +97,11 @@ for k = 1:length(subj_ID)
                 nTR_current = size(task_ts,1);
                 nTR = nTR + nTR_current;
                 if strcmpi(type, 'neutral')
-                    scanInd_current = false(nTR_current,1);
+                    scanInd_current = false(nTR_current,1); % neutral = 0
+                elseif strcmpi(type, 'worry')
+                    scanInd_current = true(nTR_current,1); % worry = 1
                 else
-                    scanInd_current = true(nTR_current,1);
+                    scanInd_current = repelem(2, nTR_current)'; % ruminate = 2
                 end
                 nbackInd_current = [repelem(0,10) repelem(1,nTR_current-10)]';
                 TS = [TS; task_ts];
@@ -126,7 +128,7 @@ nTR = sum(nTR_all); % use sa
 nsubjs = 44;		% number of subjects is total # of TRs divided by # of TRs per subjects
 subjInd = [repelem(1:nsubjs,nTR_all)]'; % index data from each subject
 % scanInd = scanInd; % index scans within your time series data
-scanlab = {'neutral','worry_or_ruminate'}; % text labels for scan indices
+scanlab = {'neutral','worry', 'ruminate'}; % text labels for scan indices
 [T,nparc] = size(TS);
 
 %% identify brain states

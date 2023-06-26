@@ -35,14 +35,17 @@ end
 %% get transition probabilities within two back blocks
 % load data/HCP_TwoBackBlock.mat % load indicator vector specifying location of two back blocks
 
+condition = 2; % 1 for worry, 2 for ruminate
+types = {'Neutral', 'Worry', 'Rumination'}
+
 RWTransitionProbabilityNoPersist2D_oneBack = zeros(nsubjs,numClusters^2);
 RWTransitionProbabilityMatsNoPersist_oneBack = zeros(nsubjs,numClusters,numClusters);	% preallocate transition probability matrices
 RWTransitionProbabilityNoPersist2D_thought_cue = zeros(nsubjs,numClusters,numClusters);
 RWTransitionProbabilityMatsNoPersist_thought_cue = zeros(nsubjs,numClusters,numClusters);
 for N = 1:nsubjs
-	subjPartition = partition(subjInd == N & scanInd == 1);
-    TwoBackBlock = nbackInd(subjInd == N & scanInd == 1);
-    NotTwoBackBlock = ~nbackInd(subjInd == N & scanInd ==1);
+	subjPartition = partition(subjInd == N & scanInd == condition);
+    TwoBackBlock = nbackInd(subjInd == N & scanInd == condition);
+    NotTwoBackBlock = ~nbackInd(subjInd == N & scanInd ==condition);
 	[RWTransitionProbabilityMatsNoPersist_oneBack(N,:,:),RWTransitionProbabilityNoPersist2D_oneBack(N,:)] = GET_BLOCK_TRANS_PROBS_NO_PERSIST(subjPartition,TwoBackBlock,numClusters);
     [RWTransitionProbabilityMatsNoPersist_thought_cue(N,:,:),RWTransitionProbabilityNoPersist2D_thought_cue(N,:)] = GET_BLOCK_TRANS_PROBS_NO_PERSIST(subjPartition,NotTwoBackBlock,numClusters);
 end
@@ -80,7 +83,7 @@ xticklabels(clusterNames); xtickangle(90); yticklabels(clusterNames); axis squar
 COLOR_TICK_LABELS(true,true,numClusters);
 
 ylabel('Current State'); xlabel('Next New State');
-title('Worry or Rumination');
+title(char(types(condition+1)));
 set(gca,'FontSize',8);
 set(gca,'TickLength',[0 0]);
 set(gca,'Fontname','arial');
@@ -92,13 +95,13 @@ imagesc(nBackMinusRestTP.*~eye(numClusters)); colormap('plasma');
 xticks(1:numClusters); xticklabels(clusterNames); xtickangle(90);
 yticks(1:numClusters); yticklabels(clusterNames); axis square
 ylabel('Current State'); xlabel('Next New State');
-sig_thresh = 0.05 / numClusters^2;      % bonferroni correction, for two-tailed p-values so only
+sig_thresh = 0.05 / ((numClusters^2)-numClusters);      % bonferroni correction, for two-tailed p-values so only
 [y,x] = find(pvals_twotail.*~eye(numClusters) < sig_thresh);
 text(x-.12,y+.12,'*','Color','w');
 caxis_bound = max(max(abs(nBackMinusRestTP.*~eye(numClusters))));
-h = colorbar; ylabel(h,'Worry or Rumination - Neutral'); caxis([-caxis_bound caxis_bound]); h.Ticks = [-caxis_bound 0 caxis_bound]; h.TickLabels = [round(-caxis_bound,2,'significant') 0 round(caxis_bound,2,'significant')];
+h = colorbar; ylabel(h, [char(types(condition+1)) ' - Neutral']); caxis([-caxis_bound caxis_bound]); h.Ticks = [-caxis_bound 0 caxis_bound]; h.TickLabels = [round(-caxis_bound,2,'significant') 0 round(caxis_bound,2,'significant')];
 COLOR_TICK_LABELS(true,true,numClusters);
-title('Worry or Rumination > Neutral');
+title([char(types(condition+1)) ' > Neutral']);
 set(gca,'FontSize',8);
 set(gca,'TickLength',[0 0]);
 set(gca,'Fontname','arial');
@@ -107,7 +110,7 @@ f.PaperUnits = 'inches';
 f.PaperSize = [8 4];
 f.PaperPosition = [0 0 8 4];
 % plot transition probability matrices
-saveas(f,fullfile(savedir,['Rest2BackTransProbs_k',num2str(numClusters),'.pdf']),'pdf');
+%saveas(f,fullfile(savedir,['Rest2BackTransProbs_k',num2str(numClusters),'.pdf']),'pdf');
 
 % see code/transprobs/plot_transprob_digraph.m for visualizing TPs as a
 % directed network
@@ -115,7 +118,7 @@ saveas(f,fullfile(savedir,['Rest2BackTransProbs_k',num2str(numClusters),'.pdf'])
 %% plot transition probabilities group differences (analysis i)
 
 
-thought_types = {'Neutral', 'Worry or rumination'};
+thought_types = {'Neutral', char(types(condition+1))};
 group_types = {'control', 'clinical'};
 for J = 0
     group_type = group_types{J+1};
@@ -170,7 +173,7 @@ for J = 0
         xticks(1:numClusters); xticklabels(clusterNames); xtickangle(90);
         yticks(1:numClusters); yticklabels(clusterNames); axis square
         ylabel('Current State'); xlabel('Next New State');
-        sig_thresh = 0.05 / numClusters^2;      % bonferroni correction, for two-tailed p-values so only
+        sig_thresh = 0.05 / ((numClusters^2)-numClusters);      % bonferroni correction, for two-tailed p-values so only
         [y,x] = find(reshape(p, 6, 6).*~eye(numClusters) < sig_thresh);
         text(x-.12,y+.12,'*','Color','k');
         caxis_bound = max(max(abs(nBackMinusRestTP.*~eye(numClusters))));
@@ -192,7 +195,7 @@ end
 % directed network
 
 %% plot transition probabilities within group (analysis ii)
-thought_types = {'Neutral', 'Worry or rumination'};
+thought_types = {'Neutral', char(types(condition+1))};
 group_types = {'control', 'clinical'};
 for J = 0:1
     group_type = group_types{J+1};
@@ -237,7 +240,7 @@ for J = 0:1
     xticks(1:numClusters); xticklabels(clusterNames); xtickangle(90);
     yticks(1:numClusters); yticklabels(clusterNames); axis square
     ylabel('Current State'); xlabel('Next New State');
-    sig_thresh = 0.05 / numClusters^2;      % bonferroni correction, for two-tailed p-values so only
+    sig_thresh = 0.05 / ((numClusters^2)-numClusters);      % bonferroni correction, for two-tailed p-values so only
     [y,x] = find(reshape(p, 6, 6).*~eye(numClusters) < sig_thresh);
     text(x-.12,y+.12,'*','Color','k');
     caxis_bound = max(max(abs(nBackMinusRestTP.*~eye(numClusters))));
@@ -285,7 +288,7 @@ end
 % find(p7< 0.05/numClusters^2)
 
 
-thought_types = {'Neutral', 'Worry or rumination'};
+thought_types = {'Neutral',  char(types(condition+1))};
 group_types = {'control', 'clinical'};
 for J = 0:1
     group_type = group_types{J+1};
@@ -340,7 +343,7 @@ for J = 0:1
         xticks(1:numClusters); xticklabels(clusterNames); xtickangle(90);
         yticks(1:numClusters); yticklabels(clusterNames); axis square
         ylabel('Current State'); xlabel('Next New State');
-        sig_thresh = 0.05 / numClusters^2;      % bonferroni correction, for two-tailed p-values so only
+        sig_thresh = 0.05 / ((numClusters^2)-numClusters);      % bonferroni correction, for two-tailed p-values so only
         [y,x] = find(reshape(p, 6, 6).*~eye(numClusters) < sig_thresh);
         text(x-.12,y+.12,'*','Color','k');
         caxis_bound = max(max(abs(nBackMinusRestTP.*~eye(numClusters))));

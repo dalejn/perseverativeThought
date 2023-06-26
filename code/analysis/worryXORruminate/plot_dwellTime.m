@@ -2,13 +2,17 @@
 
 dwellTime_neutral = zeros(nsubjs,numClusters);
 dwellTime_worry_ruminate = zeros(nsubjs,numClusters);
+dwellTime_worry = zeros(nsubjs,numClusters);
+dwellTime_ruminate = zeros(nsubjs,numClusters);
 dwellTime_neutral_thought = zeros(nsubjs,numClusters);
 dwellTime_neutral_oneBack = zeros(nsubjs,numClusters);
-dwellTime_worry_ruminate_thought = zeros(nsubjs,numClusters);
-dwellTime_worry_ruminate_oneBack = zeros(nsubjs,numClusters);
+dwellTime_worry_thought = zeros(nsubjs,numClusters);
+dwellTime_worry_oneBack = zeros(nsubjs,numClusters);
+dwellTime_ruminate_thought = zeros(nsubjs,numClusters);
+dwellTime_ruminate_oneBack = zeros(nsubjs,numClusters);
 % calculate dwell time, i.e. average number of subsequent TRs that each state lasts for
 % store both mean and median, because dwell time may not be normally distributed
-TR = 3;     % PNC TR length
+TR = 3;     % TR length
 DwellTimeMean = zeros(nsubjs,numClusters);
 % DwellTimeMedian = zeros(nsubjs,numClusters);
 % RunRate = zeros(nsubjs,numClusters);
@@ -16,13 +20,15 @@ DwellTimeMean = zeros(nsubjs,numClusters);
 % scanInd = neutral or worry/ruminate
 % nbackInd = thought cue or 1-back
 for N = 1:nsubjs
-    for J = 0:1
+    for J = 0:2
         subjPartition = partition(subjInd == N & scanInd == J);
         TwoBackBlock = nbackInd(subjInd == N & scanInd == J);
         if J == 0
             dwellTime_neutral(N,:) = CALC_DWELL_TIME(subjPartition,numClusters);
-        else
-            dwellTime_worry_ruminate(N,:) = CALC_DWELL_TIME(subjPartition,numClusters);
+        elseif J == 1
+            dwellTime_worry(N,:) = CALC_DWELL_TIME(subjPartition,numClusters);
+        elseif J == 2
+            dwellTime_ruminate(N,:) = CALC_DWELL_TIME(subjPartition,numClusters);
         end
         for I = 0:1
             if I == 0 && J == 0
@@ -30,9 +36,13 @@ for N = 1:nsubjs
             elseif I==1 && J==0
                 dwellTime_neutral_oneBack(N,:) = CALC_DWELL_TIME(subjPartition(TwoBackBlock==I),numClusters);
             elseif I==0 && J==1
-                dwellTime_worry_ruminate_thought(N,:) = CALC_DWELL_TIME(subjPartition(TwoBackBlock==I),numClusters);
+                dwellTime_worry_thought(N,:) = CALC_DWELL_TIME(subjPartition(TwoBackBlock==I),numClusters);
             elseif I==1 && J==1
-                dwellTime_worry_ruminate_oneBack(N,:) = CALC_DWELL_TIME(subjPartition(TwoBackBlock==I),numClusters);
+                dwellTime_worry_oneBack(N,:) = CALC_DWELL_TIME(subjPartition(TwoBackBlock==I),numClusters);
+            elseif I==0 && J==2
+                dwellTime_ruminate_thought(N,:) = CALC_DWELL_TIME(subjPartition(TwoBackBlock==I),numClusters);
+            elseif I==1 && J==2
+                dwellTime_ruminate_oneBack(N,:) = CALC_DWELL_TIME(subjPartition(TwoBackBlock==I),numClusters);
             end
         end
     end
@@ -75,7 +85,6 @@ end
 
 %% plot fractional occupancy group differences (analysis i)
 
-
 % dwellTime_neutral = zeros(nsubjs,numClusters);
 % dwellTime_worry_ruminate = zeros(nsubjs,numClusters);
 % dwellTime_neutral_thought = zeros(nsubjs,numClusters);
@@ -83,8 +92,19 @@ end
 % dwellTime_worry_ruminate_thought = zeros(nsubjs,numClusters);
 % dwellTime_worry_ruminate_oneBack = zeros(nsubjs,numClusters);
 
-thought_types = {'Neutral', 'Worry or rumination'};
+condition = 2;
+
+thought_types = {'Neutral', char(types(condition+1))};
 group_types = {'control', 'clinical'};
+
+if condition==1
+    dwellTime_worry_ruminate_thought = dwellTime_worry_thought;
+    dwellTime_worry_ruminate_oneBack = dwellTime_worry_oneBack;
+elseif condition==2
+    dwellTime_worry_ruminate_thought = dwellTime_ruminate_thought; 
+    dwellTime_worry_ruminate_oneBack = dwellTime_ruminate_oneBack;
+end
+
 fig = figure(1)
 for J = 0
     for K=1:2
@@ -132,7 +152,7 @@ saveas(fig,fullfile(savedir,['between','diff_','dwellTime_k',num2str(numClusters
 
 %% plot dwell time within group (analysis ii)
 
-thought_types = {'Neutral', 'Worry or rumination'};
+thought_types = {'Neutral', char(types(condition+1))};
 group_types = {'control', 'clinical'};
 f = figure;
     
@@ -154,7 +174,7 @@ h = axes(f,'visible','off');
 h.Title.Visible = 'on';
 h.XLabel.Visible = 'on';
 h.YLabel.Visible = 'on';
-ylabel(h,'Difference in Dwell Time (worry or ruminate-neutral)','FontWeight','bold');
+ylabel(h,['Difference in Dwell Time (' thought_type ' - neutral)'],'FontWeight','bold');
 xlabel(h,'Brain State','FontWeight','bold');
 c = lcolorbar(clusterNames);
 set(c, 'Position', [0.92 0.168 0.022 0.7])
@@ -165,7 +185,7 @@ set(c, 'Position', [0.92 0.168 0.022 0.7])
 
 %% %% plot dwell time group differences (analysis iii)
 
-thought_types = {'Neutral', 'Worry or rumination'};
+thought_types = {'Neutral', char(types(condition+1))};
 group_types = {'control', 'clinical'};
 fig = figure(1)
 for J = 0
@@ -203,7 +223,7 @@ h = axes(fig,'visible','off');
 h.Title.Visible = 'on';
 h.XLabel.Visible = 'on';
 h.YLabel.Visible = 'on';
-ylabel(h,'Difference in dwell time (1-back-neutral)','FontWeight','bold');
+ylabel(h,['Difference in dwell time (1-back - ' thought_type ')'],'FontWeight','bold');
 xlabel(h,'Brain State','FontWeight','bold');
 c = lcolorbar(clusterNames);
 set(c, 'Position', [0.93 0.168 0.022 0.7])
