@@ -138,7 +138,91 @@ similarityMatrix = corr(A, reorderedB);
 heatmap(similarityMatrix);
 colormap(jet(512))
 
-%% generate all permutations to reorder columns of k-means clustering partition
+%% repeat clustering and find centroid name distribution for each state
+
+centroids_partition1 = GET_CENTROIDS(TS,partition,numClusters);
+clusterNames = NAME_CLUSTERS_ANGLE(centroids_partition1);  % need to add a prior Yeo partition labels for your parcellation
+
+names_all = cell(nreps,numClusters);
+
+% identify brain states
+for R = 1:500
+    [partition_new,~,sumd_new] = kmeans(TS,numClusters,'MaxIter',nreps, 'Distance', distanceMethod,'Replicates',5);
+    
+    centroids_partition2 = GET_CENTROIDS(TS,partition_new,numClusters);
+    
+    A = centroids_partition1;
+    B = centroids_partition2;
+    numColumns = size(A, 2);
+    permutations = perms(1:numColumns);  % Generate all permutations of column indices
+
+    maxCorrelation = 0;
+    bestPermutation = [];
+
+    for i = 1:size(permutations, 1)
+        permutedB = B(:, permutations(i, :));  % Permute columns of A
+        correlation = trace(corr(A, permutedB));  % Calculate correlation with B
+
+        if correlation > maxCorrelation
+            maxCorrelation = correlation;
+            bestPermutation = permutations(i, :);
+        end
+    end
+
+    reorderedB = B(:, bestPermutation);  % Reorder columns of B based on best permutation
+    
+    clusterNames_new = NAME_CLUSTERS_ANGLE(reorderedB);  % need to add a prior Yeo partition labels for your parcellation
+    names_all(R,:) = clusterNames_new;
+
+    save(['repClustering/partition_' num2str(R) '.mat'], 'partition_new', 'clusterNames_new')
+end
+
+%% plot pie charts
+
+t = tiledlayout(1,6);
+nexttile
+pie(categorical(names_all(:,1)))
+nexttile
+pie(categorical(names_all(:,2)))
+nexttile
+pie(categorical(names_all(:,3)))
+nexttile
+pie(categorical(names_all(:,4)))
+nexttile
+pie(categorical(names_all(:,5)))
+nexttile
+pie(categorical(names_all(:,6)))
+
+%% plot spider charts
+
+% VIS SOM DAT VAT LIM FPN DMN
+% 1 94.2 5.8 0 0 0 0 0
+% 2 69.8 25 0 4.4 0 0.8 0
+% 3 21.4 12.6 0 0 0 66 0
+% 4 23.2 76.8 0 0 0 0 0
+% 5 0 20.6 0 0 0 0 79.4
+% 6 0 84 4.8 0.2 0 0 11
+
+% Initialize data points
+D1 = [94.2 5.8 0 0 0 0 0];
+D2 = [69.8 25 0 4.4 0 0.8 0];
+D3 = [21.4 12.6 0 0 0 66 0];
+D4 = [23.2 76.8 0 0 0 0 0];
+D5 = [0 20.6 0 0 0 0 79.4];
+D6 = [0 84 4.8 0.2 0 0 11];
+
+P = [D1; D2; D3; D4; D5; D6];
+
+% Spider plot
+spider_plot(P,...
+    'AxesLabels', {'VIS', 'SOM', 'DAT', 'VAT', 'LIM', 'FPN', 'DMN'},...
+    'AxesLimits', [0, 0, 0, 0, 0, 0, 0;100, 100, 100, 100, 100, 100, 100],... % [min axes limits; max axes limits]
+    'AxesInterval', 2,...
+    'FillOption', {'on', 'on', 'on', 'on', 'on', 'on'},...
+    'FillTransparency', [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]);
+
+
+%% function to generate all permutations to reorder columns of k-means clustering partition
 
 function reorderedA = maximizeCorrelation(A, B)
     numColumns = size(A, 2);
