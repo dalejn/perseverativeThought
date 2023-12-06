@@ -31,9 +31,12 @@ for N = 1:nsubjs
     set(gca,'Xticklabel',[]) %to just get rid of the numbers but leave the ticks.
 end
 hold off
+t= title("Neural activity assigned to discrete brain states")
+set(t,'position',get(t,'position')-[0 58 0])
+set(colorbar, 'Position', [0.93 0.168 0.022 0.7]);
 h = axes(fig,'visible','off'); 
-c = lcolorbar(["1" "2" "3" "4" "5" "6"]);
-set(c, 'Position', [0.93 0.168 0.022 0.7])
+% c = lcolorbar(["1" "2" "3" "4" "5" "6"]);
+% set(c, 'Position', [0.93 0.168 0.022 0.7])
 annotation('line', [0.115 0.925], [0.4075 0.4075], 'Color', 'r', 'LineWidth', 1);
 annotation('textbox',[0 0.1 0.6 0.6],'String', {'Clinical group'}, 'EdgeColor','none')
 annotation('textbox',[0 0.1 0.2 0.2],'String', {'Control group'}, 'EdgeColor','none')
@@ -51,6 +54,7 @@ subplot(1,2,2); imagesc(corr(centroids)); title('Centroid Similarity'); colorbar
 colormap('plasma'); axis square; set(gca,'FontSize',8); xticks(1:numClusters); yticks(1:numClusters); 
 xticklabels(clusterNames); yticklabels(clusterNames); xtickangle(90);
 COLOR_TICK_LABELS(true,true,numClusters);
+
 f.PaperUnits = 'inches';
 f.PaperSize = [4 2];
 f.PaperPosition = [0 0 4 2];

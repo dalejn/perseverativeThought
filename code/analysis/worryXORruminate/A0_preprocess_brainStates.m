@@ -3,9 +3,9 @@ clear
 clc
 
 % set directory to main folder with scripts
-basedir = '/Users/dalezhou/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/';
+basedir = '/Users/dalejn/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/';
 cd(basedir)
-addpath(genpath('/Users/dalezhou/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/code/'))
+addpath(genpath('/Users/dalejn/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/code/'))
 
 % Define numbers and subjects
 nreg=214;

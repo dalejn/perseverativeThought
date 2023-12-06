@@ -379,16 +379,10 @@ for J = 0:1
         
         if J==0
             if K==1
-                sgtitle("Transition probability between 1-back and neutral thought within control group")
-            else
-                sgtitle("Transition probability between 1-back and worry/rumination thought within control group")
-            end
+                
+            sgtitle("Transition probability between 1-back and neutral thought within control group")
         elseif J==1
-            if K==1
-                sgtitle("Transition probability between 1-back and neutral thought within clinical group")
-            else
-                sgtitle("Transition probability between 1-back and worry/rumination thought within clinical group")
-            end
+            sgtitle("Transition probability between 1-back and neutral thought within clinical group")
         end
 
         f.PaperUnits = 'inches';

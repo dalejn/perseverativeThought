@@ -55,11 +55,9 @@ for j = 1:2
     if j==1
         h = barh(1:nsubjs,dwellTime_neutral,'stacked');
         type = 'neutral';
-        title("Dwell time in brain states during neutral thought")
     elseif j==2
         h = barh(1:nsubjs,dwellTime_worry_ruminate,'stacked');
         type = 'worry_ruminate';
-        title("Dwell time in brain states during worry/rumination")
     end
     for i=1:size(myColorMap,1)
         h(i).FaceColor = myColorMap(i,:);
@@ -181,7 +179,7 @@ h.Title.Visible = 'on';
 h.XLabel.Visible = 'on';
 h.YLabel.Visible = 'on';
 h.YLabel.Position(1) = -0.07;
-ylabel(h,'Mean difference in dwell time (worry/rumination-neutral)','FontWeight','bold');
+ylabel(h,'Difference in Dwell Time (worry or ruminate-neutral)','FontWeight','bold');
 xlabel(h,'Brain State','FontWeight','bold');
 
 saveas(f,fullfile(savedir,['within','diff_', group_type,'_dwellTime_k',num2str(numClusters),'.pdf']),'pdf');
@@ -212,7 +210,6 @@ for J = 0
             [y,x] = find(p_adj<0.05);
             text(x-.12,y-1.01,'x','Color','k');
             b.CData = myColorMap;
-            title("Difference in dwell time between 1-back and neutral thought in control group")
 %             for k = 1:numClusters
 %                 set(b(k), 'FaceColor', myColorMap(k,:));
 %             end
@@ -230,7 +227,6 @@ for J = 0
             [y,x] = find(p_adj<0.05);
             text(x-.12,y-1.01,'x','Color','k');
             b.CData = myColorMap;
-            title("Difference in dwell time between 1-back and neutral thought in clinical group")
 %             for k = 1:numClusters
 %                 set(b(k), 'FaceColor', myColorMap(k,:));
 %             end
@@ -243,7 +239,6 @@ h = axes(fig,'visible','off');
 h.Title.Visible = 'on';
 h.XLabel.Visible = 'on';
 h.YLabel.Visible = 'on';
-h.YLabel.Position(1) = -0.07;
 ylabel(h,'Difference in dwell time (1-back-neutral)','FontWeight','bold');
 xlabel(h,'Brain State','FontWeight','bold');
 
