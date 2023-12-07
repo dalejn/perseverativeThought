@@ -112,7 +112,7 @@ f.PaperUnits = 'inches';
 f.PaperSize = [8 4];
 f.PaperPosition = [0 0 8 4];
 % plot transition probability matrices
-saveas(f,fullfile(savedir,['Rest2BackTransProbs_k',num2str(numClusters),'.pdf']),'pdf');
+saveas(f,fullfile(basedir,'results/transitionProbability/',['Rest2BackTransProbs_k',num2str(numClusters),'.pdf']),'pdf');
 
 % see code/transprobs/plot_transprob_digraph.m for visualizing TPs as a
 % directed network
@@ -191,12 +191,19 @@ for J = 0
         set(gca,'FontSize',8);
         set(gca,'TickLength',[0 0]);
         set(gca,'Fontname','arial');
+        
+
+        if K==1
+            sgtitle("Transition probabilities for neutral thought between clinical and control groups")
+        elseif K==2
+            sgtitle("Transition probabilities for worry/rumination between clinical and control groups")
+        end
 
         f.PaperUnits = 'inches';
         f.PaperSize = [8 4];
         f.PaperPosition = [0 0 8 4];
         % plot transition probability matrices
-        saveas(f,fullfile(savedir,['between_','diff_', regexprep(lower(thought_type), ' ', '_'),'_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
+        saveas(f,fullfile(basedir,'results/transitionProbability/',['between_','diff_', regexprep(lower(thought_type), ' ', '_'),'_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
     end
 end
 % see code/transprobs/plot_transprob_digraph.m for visualizing TPs as a
@@ -273,7 +280,7 @@ for J = 0:1
     f.PaperSize = [8 4];
     f.PaperPosition = [0 0 8 4];
     % plot transition probability matrices
-    saveas(f,fullfile(savedir,['within','diff_', group_type,'_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
+    saveas(f,fullfile(basedir,'results/transitionProbability/',['within','diff_', group_type,'_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
 end
 
 % see code/transprobs/plot_transprob_digraph.m for visualizing TPs as a
@@ -395,7 +402,7 @@ for J = 0:1
         f.PaperSize = [8 4];
         f.PaperPosition = [0 0 8 4];
         % plot transition probability matrices
-        saveas(f,fullfile(savedir,['within_', group_type,'_diff_', regexprep(lower(thought_type), ' ', '_'),'ToOneBack_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
+        saveas(f,fullfile(basedir,'results/transitionProbability/',['within_', group_type,'_diff_', regexprep(lower(thought_type), ' ', '_'),'ToOneBack_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
     end
 end
 % see code/transprobs/plot_transprob_digraph.m for visualizing TPs as a
@@ -457,4 +464,4 @@ xlim([0 3]); ylim([0 5]); axis off
 f.PaperUnits = 'centimeters';
 f.PaperPosition = [0 0 2 2];
 f.PaperSize = [2 2];
-saveas(f,fullfile(basedir,'results/',['TransProbDigraphWidthAxisScale_Thresh',num2str(thresh),'_k',num2str(numClusters),'.pdf']));
+saveas(f,fullfile(basedir,'results/transitionProbability/',['TransProbDigraphWidthAxisScale_Thresh',num2str(thresh),'_k',num2str(numClusters),'.pdf']));

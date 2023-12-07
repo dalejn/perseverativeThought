@@ -1,4 +1,5 @@
 %% Dwell time
+savedir = '/Users/dalejn/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/results/dwellTime/';
 
 dwellTime_neutral = zeros(nsubjs,numClusters);
 dwellTime_worry_ruminate = zeros(nsubjs,numClusters);
@@ -139,7 +140,7 @@ h.Title.Visible = 'on';
 h.XLabel.Visible = 'on';
 h.YLabel.Visible = 'on';
 h.YLabel.Position(1) = -0.07;
-ylabel(h,'Mean difference in dwell time (clinical-control)', 'FontWeight', 'bold');
+ylabel(h,'Clinical - control', 'FontWeight', 'bold');
 xlabel(h,'Brain State','FontWeight','bold');
 
 saveas(fig,fullfile(savedir,['between','diff_','dwellTime_k',num2str(numClusters),'.pdf']),'pdf');
@@ -181,7 +182,7 @@ h.Title.Visible = 'on';
 h.XLabel.Visible = 'on';
 h.YLabel.Visible = 'on';
 h.YLabel.Position(1) = -0.07;
-ylabel(h,'Mean difference in dwell time (worry/rumination-neutral)','FontWeight','bold');
+ylabel(h,'Worry/rumination - neutral','FontWeight','bold');
 xlabel(h,'Brain State','FontWeight','bold');
 
 saveas(f,fullfile(savedir,['within','diff_', group_type,'_dwellTime_k',num2str(numClusters),'.pdf']),'pdf');
@@ -191,13 +192,18 @@ saveas(f,fullfile(savedir,['within','diff_', group_type,'_dwellTime_k',num2str(n
 
 %% %% plot dwell time group differences (analysis iii)
 
+% dwellTime_neutral_thought
+% dwellTime_neutral_oneBack
+% dwellTime_worry_ruminate_thought
+% dwellTime_worry_ruminate_oneBack
+
 thought_types = {'Neutral', 'Worry or rumination'};
 group_types = {'control', 'clinical'};
-fig = figure(1)
+
 for J = 0
     for K=1:2
         thought_type = thought_types{K};
-
+        fig = figure(K)
         if strcmpi(thought_type, 'Neutral')
             subplot(2,1,1)
             x = dwellTime_neutral_thought(groupInd==J,:);
@@ -213,10 +219,11 @@ for J = 0
             text(x-.12,y-1.01,'x','Color','k');
             b.CData = myColorMap;
             title("Difference in dwell time between 1-back and neutral thought in control group")
+            ylabel(['1-back - ' thought_type]);
+
 %             for k = 1:numClusters
 %                 set(b(k), 'FaceColor', myColorMap(k,:));
 %             end
-        else
             subplot(2,1,2)
             x = dwellTime_neutral_thought(groupInd==J+1,:);
             y = dwellTime_neutral_oneBack(groupInd==J+1,:);
@@ -231,20 +238,64 @@ for J = 0
             text(x-.12,y-1.01,'x','Color','k');
             b.CData = myColorMap;
             title("Difference in dwell time between 1-back and neutral thought in clinical group")
+            ylabel(['1-back - ' thought_type]);
+
+            colormap(myColorMap)
+            h = axes(fig,'visible','off'); 
+            h.Title.Visible = 'on';
+            h.XLabel.Visible = 'on';
+            h.YLabel.Visible = 'on';
+            h.YLabel.Position(1) = -0.07;
+            ylabel(['1-back - ' thought_type]);
+            xlabel(h,'Brain State','FontWeight','bold');
+            
+            saveas(fig,fullfile(savedir,['within','_diff_neutralToOneBack','dwellTime_k',num2str(numClusters),'.pdf']),'pdf');
+        else
+            subplot(2,1,1)
+            x = dwellTime_worry_ruminate_thought(groupInd==J,:);
+            y = dwellTime_worry_ruminate_oneBack(groupInd==J,:);
+            [~,p] = ttest2(y,x);
+            find(p<0.05/numClusters)
+            b=bar(nanmean(y,1)-nanmean(x,1), 'FaceColor', 'flat');
+            set(gca, 'XTick', 1:numClusters,'XTickLabel',clusterNames);
+            [y,x] = find(p<0.05/numClusters)
+            text(x-.12,y-1,'*','Color','k');
+            [~, ~, ~, p_adj] = fdr_bh(p)
+            [y,x] = find(p_adj<0.05);
+            text(x-.12,y-1.01,'x','Color','k');
+            b.CData = myColorMap;
+            title("Difference in dwell time between 1-back and worry/rumination in control group")
+            ylabel(['1-back - ' thought_type]);
+
 %             for k = 1:numClusters
 %                 set(b(k), 'FaceColor', myColorMap(k,:));
 %             end
+            subplot(2,1,2)
+            x = dwellTime_worry_ruminate_thought(groupInd==J+1,:);
+            y = dwellTime_worry_ruminate_oneBack(groupInd==J+1,:);
+            [~,p] = ttest2(y,x);
+            find(p<0.05/numClusters)
+            b=bar(nanmean(y,1)-nanmean(x,1), 'FaceColor', 'flat');
+            set(gca, 'XTick', 1:numClusters,'XTickLabel',clusterNames);
+            [y,x] = find(p<0.05/numClusters)
+            text(x-.12,y-1,'*','Color','k');
+            [~, ~, ~, p_adj] = fdr_bh(p)
+            [y,x] = find(p_adj<0.05);
+            text(x-.12,y-1.01,'x','Color','k');
+            b.CData = myColorMap;
+            title("Difference in dwell time between 1-back and worry/rumination in clinical group")
+            ylabel(['1-back - ' thought_type]);
+            colormap(myColorMap)
+            h = axes(fig,'visible','off'); 
+            h.Title.Visible = 'on';
+            h.XLabel.Visible = 'on';
+            h.YLabel.Visible = 'on';
+            h.YLabel.Position(1) = -0.07;
+            ylabel(['1-back - ' thought_type]);
+            xlabel(h,'Brain State','FontWeight','bold');
+            
+            saveas(fig,fullfile(savedir,['within','_diff_worry_or_ruminationToOneBack','dwellTime_k',num2str(numClusters),'.pdf']),'pdf');
         end
-        
+
     end
 end
-colormap(myColorMap)
-h = axes(fig,'visible','off'); 
-h.Title.Visible = 'on';
-h.XLabel.Visible = 'on';
-h.YLabel.Visible = 'on';
-h.YLabel.Position(1) = -0.07;
-ylabel(h,'Difference in dwell time (1-back-neutral)','FontWeight','bold');
-xlabel(h,'Brain State','FontWeight','bold');
-
-saveas(fig,fullfile(savedir,['within','neutral_diff_thoughtOneBack','dwellTime_k',num2str(numClusters),'.pdf']),'pdf');

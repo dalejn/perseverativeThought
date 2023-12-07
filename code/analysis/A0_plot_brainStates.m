@@ -1,4 +1,6 @@
 %% plot brain states
+savedir = '/Users/dalejn/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/results/';
+
 hexMap = GET_CLUSTER_COLORS(6);
 for k = 1 : length(hexMap)
 	thisCell = hexMap{k}
@@ -40,6 +42,7 @@ h = axes(fig,'visible','off');
 annotation('line', [0.115 0.925], [0.4075 0.4075], 'Color', 'r', 'LineWidth', 1);
 annotation('textbox',[0 0.1 0.6 0.6],'String', {'Clinical group'}, 'EdgeColor','none')
 annotation('textbox',[0 0.1 0.2 0.2],'String', {'Control group'}, 'EdgeColor','none')
+saveas(fig,fullfile(savedir,['Centroids_k',num2str(numClusters),'.pdf']));
 
 %% compute centroids and plot
 centroids = GET_CENTROIDS(TS,partition,numClusters);
