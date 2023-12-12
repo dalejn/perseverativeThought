@@ -1,6 +1,6 @@
 %% Fractional occupancy
 
-savedir = '/Users/dalejn/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/results/fractionalOccupancy/';
+savedir = '/Users/dalejn/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/results/combined_worryRumination/fractionalOccupancy/';
 
 FractionalOccupancy_neutral = zeros(nsubjs,numClusters);
 FractionalOccupancy_worry_ruminate = zeros(nsubjs,numClusters);

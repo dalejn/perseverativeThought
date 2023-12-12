@@ -1,5 +1,5 @@
 %% Dwell time
-savedir = '/Users/dalejn/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/results/dwellTime/';
+savedir = '/Users/dalejn/Desktop/Dropbox/Projects/inProgress/2023-02-perseverantThought/results/combined_worryRumination/dwellTime/';
 
 dwellTime_neutral = zeros(nsubjs,numClusters);
 dwellTime_worry_ruminate = zeros(nsubjs,numClusters);
@@ -73,7 +73,7 @@ for j = 1:2
     h = axes(fig,'visible','off'); 
     % c = lcolorbar(clusterNames);
     % set(c, 'Position', [0.92 0.168 0.022 0.7])
-    saveas(fig,fullfile(basedir,'results/',['dwellTime','_k',num2str(numClusters),'_',type,'.pdf']));
+    saveas(fig,fullfile(basedir,'results/combined_worryRumination/',['dwellTime','_k',num2str(numClusters),'_',type,'.pdf']));
 end
 
 %% plot fractional occupancy group differences (analysis i)

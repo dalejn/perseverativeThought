@@ -195,12 +195,20 @@ for condition = 1:2 % 1 for worry, 2 for ruminate
             set(gca,'FontSize',8);
             set(gca,'TickLength',[0 0]);
             set(gca,'Fontname','arial');
-    
+
+            if K==1
+                sgtitle("Transition probabilities for neutral thought between clinical and control groups")
+            elseif K==2 && condition==1
+                sgtitle("Transition probabilities for worry between clinical and control groups")
+            elseif K==2 && condition==2
+                sgtitle("Transition probabilities for rumination between clinical and control groups")
+            end
+
             f.PaperUnits = 'inches';
             f.PaperSize = [8 4];
             f.PaperPosition = [0 0 8 4];
             % plot transition probability matrices
-            saveas(f,fullfile(savedir,['between_','diff_', regexprep(lower(thought_type), ' ', '_'),'_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
+            saveas(f,fullfile(savedir,strcat('transitionProbability_', thought_type), '/',['between_','diff_', regexprep(lower(thought_type), ' ', '_'),'_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
         end
     end
     % see code/transprobs/plot_transprob_digraph.m for visualizing TPs as a
@@ -269,11 +277,17 @@ for condition = 1:2 % 1 for worry, 2 for ruminate
         set(gca,'TickLength',[0 0]);
         set(gca,'Fontname','arial');
     
+        if J==0
+            sgtitle(["Difference in transition probability between neutral and " thought_type " within control group"])
+        elseif J==1
+            sgtitle(["Difference in transition probability between neutral and " thought_type " within clinical group"])
+        end
+
         f.PaperUnits = 'inches';
         f.PaperSize = [8 4];
         f.PaperPosition = [0 0 8 4];
         % plot transition probability matrices
-        saveas(f,fullfile(savedir,['within','diff_', group_type,'_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
+        saveas(f,fullfile(savedir,strcat('transitionProbability_', thought_type), '/',['within','diff_', group_type,'_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
     end
     % see code/transprobs/plot_transprob_digraph.m for visualizing TPs as a
     % directed network
@@ -378,11 +392,31 @@ for condition = 1:2 % 1 for worry, 2 for ruminate
             set(gca,'TickLength',[0 0]);
             set(gca,'Fontname','arial');
     
+        
+            if J==0
+                if K==1
+                    sgtitle("Transition probability between 1-back and neutral thought within control group")
+                elseif K==2 && condition==1
+                    sgtitle("Transition probability between 1-back and worry within control group")
+                elseif K==2 && condition==2
+                    sgtitle("Transition probability between 1-back and rumination within control group")
+                end
+            elseif J==1
+                if K==1
+                    sgtitle("Transition probability between 1-back and neutral thought within clinical group")
+                elseif K==2 && condition==1
+                    sgtitle("Transition probability between 1-back and worry within clinical group")
+                elseif K==2 && condition==2
+                    sgtitle("Transition probability between 1-back and rumination within clinical group")
+                end
+            end
+
+
             f.PaperUnits = 'inches';
             f.PaperSize = [8 4];
             f.PaperPosition = [0 0 8 4];
             % plot transition probability matrices
-            saveas(f,fullfile(savedir,['within_', group_type,'_diff_', regexprep(lower(thought_type), ' ', '_'),'ToOneBack_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
+            saveas(f,fullfile(savedir,strcat('transitionProbability_', thought_type), '/',['within_', group_type,'_diff_', regexprep(lower(thought_type), ' ', '_'),'ToOneBack_TransProbs_k',num2str(numClusters),'.pdf']),'pdf');
         end
     end
     % see code/transprobs/plot_transprob_digraph.m for visualizing TPs as a
